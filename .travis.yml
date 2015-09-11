@@ -1,0 +1,34 @@
+language: ruby
+rvm:
+  - 2.2
+
+branches:
+  only:
+    - master
+
+addons:
+  postgresql: "9.4"
+
+env:
+  - REDMINE_VER=3.1-stable
+#  - REDMINE_VER=master
+
+install: "echo skip bundle install"
+
+before_script:
+  - cp config/database.yml.travis config/database.yml
+  - psql -c 'create database travis_ci_test;' -U postgres
+
+script:
+  - export RAILS_ENV=test
+  - export TESTSPACE=`pwd`/testspace
+  - export NAME_OF_PLUGIN=redmine_postgresql_search
+  - export PATH_TO_PLUGIN=`pwd`
+  - export PATH_TO_REDMINE=$TESTSPACE/redmine
+  - export PATH_TO_TESTER=`pwd`/redmine_tester.sh
+  - mkdir $TESTSPACE
+  - cp config/database.yml.travis $TESTSPACE/database.yml
+  - bash -x ./redmine_install.sh -c
+  - bash -x ./redmine_install.sh -i
+  - bash -x ./redmine_install.sh -t
+  - bash -x ./redmine_install.sh -u
