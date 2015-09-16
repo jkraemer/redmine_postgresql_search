@@ -68,8 +68,8 @@ echo current directory is `pwd`
 # create a link to the backlogs plugin
 ln -sf $PATH_TO_PLUGIN $PATH_TO_INSTALL/$NAME_OF_PLUGIN
 
-# copy database.yml
-cp $TESTSPACE/database.yml config/
+mv $TESTSPACE/database.yml.travis config/database.yml
+mv $TESTSPACE/additional_environment.rb config/
 
 # install gems
 mkdir -p vendor/bundle
