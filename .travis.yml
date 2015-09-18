@@ -31,4 +31,3 @@ script:
   - bash -x ./redmine_install.sh -c
   - bash -x ./redmine_install.sh -i
   - bash -x ./redmine_install.sh -t
-  - bash -x ./redmine_install.sh -u

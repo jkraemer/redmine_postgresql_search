@@ -48,14 +48,6 @@ run_tests()
 
 }
 
-uninstall()
-{
-  set -e # exit if migrate fails
-  cd $PATH_TO_REDMINE
-  # clean up database
-  bundle exec rake $MIGRATE_PLUGINS NAME=$NAME_OF_PLUGIN VERSION=0
-}
-
 run_install()
 {
 # exit if install fails
@@ -93,7 +85,6 @@ do case "$opt" in
   i)  run_install;  exit 0;;
   c)  clone_redmine; exit 0;;
   t)  run_tests;  exit 0;;
-  u)  uninstall;  exit 0;;
   [?]) echo "i: install; c: clone redmine; t: run tests; u: uninstall";;
   esac
 done
