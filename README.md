@@ -29,6 +29,13 @@ FulltextIndex model, which is kept up to date through `after_commit` hooks.
 So there is a slight penalty at record addition / modification time when the
 data gets indexed, but in general this will not be noticeable by users.
 
+Installation
+------------
+
+- checkout the plugin to `REDMINE/plugins/redmine_postgresql_search`
+- run plugin migrations: `bundle exec rake redmine:plugins:migrate`
+- run index rebuild task to initialize the index table: `bundle exec rake redmine)postgresql_search:rebuild_index`
+
 
 Known Issues
 ------------
