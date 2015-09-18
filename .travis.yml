@@ -20,14 +20,10 @@ before_script:
   - psql -c 'create extension unaccent;' -U postgres travis_ci_test
 
 script:
-  - export RAILS_ENV=test
   - export TESTSPACE=`pwd`/testspace
   - export NAME_OF_PLUGIN=redmine_postgresql_search
   - export PATH_TO_PLUGIN=`pwd`
   - export PATH_TO_REDMINE=$TESTSPACE/redmine
-  - export PATH_TO_TESTER=`pwd`/redmine_tester.sh
   - mkdir $TESTSPACE
   - cp test/support/* $TESTSPACE/
-  - bash -x ./redmine_install.sh -c
-  - bash -x ./redmine_install.sh -i
-  - bash -x ./redmine_install.sh -t
+  - bash -x ./travis.sh
