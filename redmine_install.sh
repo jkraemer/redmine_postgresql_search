@@ -70,14 +70,15 @@ bundle install --path vendor/bundle
 # run redmine database migrations
 bundle exec rake db:migrate
 
-# install redmine database
-bundle exec rake redmine:load_default_data REDMINE_LANG=en
+# run plugin database migrations
+bundle exec rake $MIGRATE_PLUGINS
 
 # generate session store/secret token
 bundle exec rake $GENERATE_SECRET
 
-# run backlogs database migrations
-bundle exec rake $MIGRATE_PLUGINS
+# install redmine database
+bundle exec rake redmine:load_default_data REDMINE_LANG=en
+
 }
 
 while getopts :ictu opt
