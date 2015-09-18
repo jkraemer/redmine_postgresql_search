@@ -1,4 +1,4 @@
-Redmine PostgreSQL Search
+Redmine PostgreSQL Search [![Build Status](https://travis-ci.org/jkraemer/redmine_postgresql_search.svg?branch=master)](https://travis-ci.org/jkraemer/redmine_postgresql_search)
 =========================
 
 Makes Redmine search use the advanced PostgreSQL fulltext index capabilities.
