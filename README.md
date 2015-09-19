@@ -34,7 +34,8 @@ Installation
 
 - checkout the plugin to `REDMINE/plugins/redmine_postgresql_search`
 - run plugin migrations: `bundle exec rake redmine:plugins:migrate`
-- run index rebuild task to initialize the index table: `bundle exec rake redmine)postgresql_search:rebuild_index`
+- run index rebuild task to initialize the index table: 
+  `bundle exec rake redmine_postgresql_search:rebuild_index`
 
 
 Known Issues
