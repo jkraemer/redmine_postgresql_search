@@ -3,7 +3,9 @@ module RedminePostgresqlSearch
   SEARCHABLES = []
   def self.setup
     Rails.logger.info 'enabling advanced PostgreSQL search'
-    Redmine::Search::Fetcher.prepend Patches::Fetcher
+    Redmine::Search::Fetcher.class_eval do
+      prepend Patches::Fetcher
+    end
 
     setup_searchable Attachment,
       mapping: { a: :filename, b: :description },
@@ -81,8 +83,6 @@ module RedminePostgresqlSearch
       extend RedminePostgresqlSearch::Patches::Searchable::ClassMethods
     end
   end
-
-
 
 end
 
