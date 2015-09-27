@@ -5,13 +5,11 @@ class FulltextIndex < ActiveRecord::Base
   WEIGHTS = %w(A B C D)
   SET_WEIGHT = "setweight(to_tsvector(:config, :text), :weight)"
 
-  scope :search, ->(q){ where "plainto_tsquery(:config, :query) @@ tsv", config: FulltextIndex.lanuage_config, query: q}
+  # the postgresql indexing config to be used
+  CONFIG = "redmine_search"
 
-  # TODO make this a setting
-  CONFIG = "redmine_english"
-  def self.lanuage_config
-    CONFIG
-  end
+  scope :search, ->(q){ where "plainto_tsquery(:config, :query) @@ tsv", config: CONFIG, query: q}
+
 
   def update_index!
     tsvector = searchable.index_data.map do |weight, value|
@@ -20,7 +18,7 @@ class FulltextIndex < ActiveRecord::Base
       if value.present?
         self.class.send(
           :sanitize_sql_array,
-          [SET_WEIGHT, {config: self.class.lanuage_config,
+          [SET_WEIGHT, {config: CONFIG,
                         text: value,
                         weight: weight}]
         )

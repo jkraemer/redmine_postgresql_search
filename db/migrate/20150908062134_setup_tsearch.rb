@@ -11,13 +11,15 @@
 class SetupTsearch < ActiveRecord::Migration
   def up
     enable_extension 'unaccent'
+    language = ENV['language'] || 'english'
     execute <<-SQL
-        CREATE TEXT SEARCH CONFIGURATION redmine_english (COPY = 'english');
-        ALTER TEXT SEARCH CONFIGURATION redmine_english ALTER MAPPING FOR hword, hword_part, word with unaccent, english_stem;
+      CREATE TEXT SEARCH DICTIONARY #{language}_stem ( TEMPLATE = snowball, Language = #{language}, StopWords = #{language} );
+      CREATE TEXT SEARCH CONFIGURATION redmine_search (COPY = '#{language}');
+      ALTER TEXT SEARCH CONFIGURATION redmine_search ALTER MAPPING FOR hword, hword_part, word with unaccent, #{language}_stem;
     SQL
   end
 
   def down
-    execute "drop text search configuation redmine_english"
+    execute "drop text search configuation redmine_search"
   end
 end

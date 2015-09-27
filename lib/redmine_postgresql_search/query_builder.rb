@@ -11,7 +11,7 @@ module RedminePostgresqlSearch
       # sql to create the query vector that is matched against the tsv
       FulltextIndex.send :sanitize_sql_array, [
         "to_tsquery(:config, :query) query",
-        config: FulltextIndex.lanuage_config, query: searchable_query
+        config: FulltextIndex.CONFIG, query: searchable_query
       ]
     end
 
