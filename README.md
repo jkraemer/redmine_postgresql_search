@@ -1,33 +1,10 @@
 Redmine PostgreSQL Search [![Build Status](https://travis-ci.org/jkraemer/redmine_postgresql_search.svg?branch=master)](https://travis-ci.org/jkraemer/redmine_postgresql_search)
 =========================
 
-Makes Redmine search use the advanced PostgreSQL fulltext index capabilities.
+Makes Redmine search use PostgreSQL full text search instead of LIKE queries.
 
-Why?
-----
+http://redmine-search.com/
 
-### Relevance of results
-
-Plain Redmine does simple `LIKE` queries and therefore lacks any relevancy
-measurement. Lacking a better option, search results are sorted by modification
-date. Especially in large setups with big result sets this leads to a bad user
-experience, since they only find what they are looking for on the first page if
-it has a recent modification date.
-
-With this plugin, Redmine will rank more relevant hits higher, i.e.  a match in
-an issue title ranks higher than one in the description, even if the latter
-issue is more recent.
-
-### Performance
-
-With it's fine grained permissions and lots of different entities to search,
-Redmine search is a complicated beast. A single search easily results in
-multiple SQL queries, each using `LIKE` statements to do the matching. This
-plugin replaces each of these LIKEs with a fast query against a dedicated
-FulltextIndex model, which is kept up to date through `after_commit` hooks.
-
-So there is a slight penalty at record addition / modification time when the
-data gets indexed, but in general this will not be noticeable by users.
 
 Installation
 ------------
@@ -93,7 +70,7 @@ Please report any issues not mentioned here [on
 Github](https://github.com/jkraemer/redmine_postgresql_search/issues).
 
 
-## Result Completeness
+### Result Completeness
 
 Search on custom fields and journal entries is done separately from search in
 issues - therefore a search for all words of the query `foo bar` will not find
@@ -108,7 +85,7 @@ you will find the issue.
 License
 -------
 
-Copyright (C) 2015 Jens Krämer <jk@jkraemer.net>
+Copyright (C) 2015 [Jens Krämer](https://jkraemer.net)
 
 The Postgresql Search plugin for Redmine is free software: you can redistribute
 it and/or modify it under the terms of the GNU General Public License as
