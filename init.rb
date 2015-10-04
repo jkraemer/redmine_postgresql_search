@@ -1,11 +1,11 @@
 Redmine::Plugin.register :redmine_postgresql_search do
   name 'Redmine PostgreSQL Search Plugin'
-  url  'https://electric-things.com/redmine_postgresql'
+  url  'http://redmine-search.com/'
 
   description 'This plugin adds advanced fulltext search capabilities to Redmine. PostgreSQL required.'
 
-  author     'Jens Krämer, Electric Things Ltd.'
-  author_url 'https://electric-things.com/'
+  author     'Jens Krämer'
+  author_url 'https://jkraemer.net/'
 
   version '1.0.0'
 
