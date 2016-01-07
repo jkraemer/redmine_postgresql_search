@@ -62,6 +62,14 @@ search - I found these two articles quite helpful:
 - http://shisaa.jp/postset/postgresql-full-text-search-part-2.html
 - http://linuxgazette.net/164/sephton.html
 
+### unaccent extension
+
+The `setup_tsearch` migration attempts to install the _unaccent_ PostgreSQL
+extension, which may fail due to insufficient privileges of your application's
+database user. To get around this, set up the extension manually (`create
+extension unaccent`) using a privileged user account and re-run the plugin
+migrations. On Ubuntu/Debian this extension is part of the `postgresql-contrib`
+package.
 
 Known Issues
 ------------
