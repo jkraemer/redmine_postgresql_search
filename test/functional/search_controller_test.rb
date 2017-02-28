@@ -94,7 +94,7 @@ class SearchControllerTest < ActionController::TestCase
     assert_equal false, assigns(:titles_only)
     assert assigns(:results).include?(Issue.find(8))
     assert assigns(:results).include?(Issue.find(5))
-    assert_select 'dt.issue.closed a',  :text => /Closed/
+    assert_select 'dt a',  :text => /closed issue/i
   end
 
   def test_search_issues_should_search_notes
