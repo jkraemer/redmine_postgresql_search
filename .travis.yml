@@ -1,9 +1,10 @@
+sudo: false
 language: ruby
 rvm:
-  - 2.0
-  - 2.2
-  - 2.3.0
-  - jruby-9.0.1.0
+  - 2.2.6
+  - 2.3.3
+  - 2.4.0
+  - jruby-9.1.7.0
 
 branches:
   only:
@@ -13,9 +14,15 @@ addons:
   postgresql: "9.4"
 
 env:
-  - REDMINE_VER=3.1-stable
-  - REDMINE_VER=3.2-stable
+  - REDMINE_VER=3.3-stable
   - REDMINE_VER=master
+
+matrix:
+  allow_failures:
+    - rvm: jruby-9.1.7.0
+  exclude:
+    - rvm: 2.4.0
+      env: REDMINE_VER=3.3-stable
 
 install: "echo skip bundle install"
 
