@@ -41,10 +41,14 @@ class SearchControllerTest < ActionController::TestCase
     assert assigns(:results).include?(Project.find(1))
   end
 
-  def test_search_on_archived_project_should_return_404
+  def test_search_on_archived_project_should_return_error
     Project.find(3).archive
     get :index, :id => 3
-    assert_response 404
+    if Redmine::VERSION::BRANCH == 'devel' # change to VERSION.to_s < '3.5' once that was released
+      assert_response 403
+    else
+      assert_response 404
+    end
   end
 
   def test_search_on_invisible_project_by_user_should_be_denied
