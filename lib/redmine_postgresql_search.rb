@@ -9,7 +9,7 @@ module RedminePostgresqlSearch
 
     setup_searchable Attachment,
       mapping: { a: :filename, b: :description },
-      project_id: ->{ container.project_id }
+      project_id: ->{ container.project_id if container.respond_to?(:project_id)}
 
     setup_searchable Changeset,
       mapping: { b: :comments },

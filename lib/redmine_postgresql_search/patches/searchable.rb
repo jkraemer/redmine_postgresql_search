@@ -111,7 +111,7 @@ module RedminePostgresqlSearch
       module InstanceMethods
 
         def update_fulltext_index
-          return unless add_to_index?
+          return if !add_to_index? or project_id.nil?
           self.fulltext_index ||= FulltextIndex.create(searchable: self, project_id: self.project_id)
 
           self.fulltext_index.update_index!
