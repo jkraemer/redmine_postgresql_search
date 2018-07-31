@@ -2,30 +2,31 @@ class FulltextIndex < ActiveRecord::Base
   belongs_to :searchable, polymorphic: true, required: true
 
   # valid weight keys. the default weights assigned are {1, 0.4, 0.2, 0.1}
-  WEIGHTS = %w(A B C D)
-  SET_WEIGHT = "setweight(to_tsvector(:config, :text), :weight)"
+  WEIGHTS = %w[A B C D].freeze
 
   # the postgresql indexing config to be used
-  CONFIG = "redmine_search"
+  SEARCH_CONFIG = 'redmine_search'.freeze
+  WORD_CONFIG = 'redmine_search_words'.freeze
 
-  scope :search, ->(q){ where "plainto_tsquery(:config, :query) @@ tsv", config: CONFIG, query: q}
-
+  scope :search, ->(q) { where 'to_tsquery(:config, :query) @@ tsv', config: SEARCH_CONFIG, query: q }
 
   def update_index!
-    tsvector = searchable.index_data.map do |weight, value|
-      weight = weight.to_s.upcase
-      raise "illegal weight key #{weight}" unless WEIGHTS.include?(weight)
-      if value.present?
-        self.class.send(
-          :sanitize_sql_array,
-          [SET_WEIGHT, {config: CONFIG,
-                        text: value,
-                        weight: weight}]
-        )
+    values = []
+    weights = []
+
+    unless destroyed?
+      searchable.index_data.each do |weight, value|
+        weight = weight.to_s.upcase
+        raise "illegal weight key #{weight}" unless WEIGHTS.include?(weight)
+        next if value.blank?
+        values << self.class.connection.quote(value)
+        weights << self.class.connection.quote(weight)
       end
-    end.compact.join(' || ')
-    if tsvector.present?
-      self.class.where(id: id).update_all "tsv = #{tsvector}"
     end
+
+    values_sql = "Array[#{values.join(', ')}]::text[]"
+    weights_sql = "Array[#{weights.join(', ')}]::char[]"
+
+    self.class.connection.execute("SELECT update_search_data('#{SEARCH_CONFIG}', '#{WORD_CONFIG}', #{id}, #{values_sql}, #{weights_sql})")
   end
 end

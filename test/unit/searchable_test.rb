@@ -33,5 +33,4 @@ class SearchableTest < RedminePostgresqlSearchTest
     assert_equal 1, ranks_and_ids.size
     assert_equal @issue.id, ranks_and_ids[0][1]
   end
-
 end

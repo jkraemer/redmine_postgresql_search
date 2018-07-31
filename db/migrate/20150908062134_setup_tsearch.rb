@@ -8,18 +8,23 @@
 # content. See
 # http://www.postgresql.org/docs/current/static/textsearch-configuration.html
 # for more information.
-class SetupTsearch < ActiveRecord::Migration
+class SetupTsearch < Rails.version < '5.2' ? ActiveRecord::Migration : ActiveRecord::Migration[4.2]
   def up
     enable_extension 'unaccent'
     language = ENV['language'] || 'english'
+    config_name = FulltextIndex::SEARCH_CONFIG
     execute <<-SQL
-      CREATE TEXT SEARCH DICTIONARY #{language}_stem ( TEMPLATE = snowball, Language = #{language}, StopWords = #{language} );
-      CREATE TEXT SEARCH CONFIGURATION redmine_search (COPY = '#{language}');
-      ALTER TEXT SEARCH CONFIGURATION redmine_search ALTER MAPPING FOR hword, hword_part, word with unaccent, #{language}_stem;
+      CREATE TEXT SEARCH DICTIONARY #{config_name} ( TEMPLATE = snowball, Language = #{language}, StopWords = #{language} );
+      CREATE TEXT SEARCH CONFIGURATION #{config_name} (COPY = '#{language}');
+      ALTER TEXT SEARCH CONFIGURATION #{config_name} ALTER MAPPING FOR hword, hword_part, word with unaccent, #{config_name};
     SQL
   end
 
   def down
-    execute "drop text search configuation redmine_search"
+    config_name = FulltextIndex::SEARCH_CONFIG
+    execute <<-SQL
+      DROP TEXT SEARCH CONFIGURATION #{config_name};
+      DROP TEXT SEARCH DICTIONARY #{config_name};
+    SQL
   end
 end

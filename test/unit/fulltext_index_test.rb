@@ -33,7 +33,7 @@ class FulltextIndexTest < RedminePostgresqlSearchTest
       end
     end
     assert page.fulltext_index.present?
-    assert r = FulltextIndex.search('some page content')
+    assert r = FulltextIndex.search('some & page & content')
     assert_equal 1, r.size
     assert_equal page, r.first.searchable
   end
@@ -49,7 +49,7 @@ class FulltextIndexTest < RedminePostgresqlSearchTest
       end
     end
     assert issue.fulltext_index.present?
-    assert_equal issue, FulltextIndex.search('find description').first.searchable
+    assert_equal issue, FulltextIndex.search('find & description').first.searchable
   end
 
   test 'issue journal should update index' do
@@ -63,17 +63,17 @@ class FulltextIndexTest < RedminePostgresqlSearchTest
     end
     assert issue.fulltext_index.present?
     assert_equal issue, FulltextIndex.search('find').first.try(:searchable), 'should find by title'
-    assert_equal issue, FulltextIndex.search('find description').first.try(:searchable), 'should find by title and description'
-    assert r = FulltextIndex.search('friendly journal').first, 'should find by journal text'
+    assert_equal issue, FulltextIndex.search('find & description').first.try(:searchable), 'should find by title and description'
+    assert r = FulltextIndex.search('friendly & journal').first, 'should find by journal text'
     assert_equal issue, r.searchable.issue
-    # TODO how to accomplish this?
+    # TODO: how to accomplish this?
     # stock redmine has the same problem...
     # assert r = FulltextIndex.search('find journal').first, 'should find by title and journal text'
   end
 
   test 'should index attachments' do
-    i = Issue.generate! :subject => 'search attachments'
-    a = Attachment.generate! :container => i, :filename => 'findme.pdf'
+    i = Issue.generate! subject: 'search attachments'
+    a = Attachment.generate! container: i, filename: 'findme.pdf'
     assert r = FulltextIndex.search('findme')
     assert_equal 1, r.size
     assert_equal a, r.first.searchable
@@ -89,14 +89,9 @@ class FulltextIndexTest < RedminePostgresqlSearchTest
   end
 
   def create_issue(attributes = {})
-    Issue.create({
-      project_id: @project.id,
-      tracker_id: 1, author_id: 1,
-      status_id: 1, priority: IssuePriority.first,
-      subject: 'Issue 1'
-      }.merge attributes
-    )
-
+    Issue.create({ project_id: @project.id,
+                   tracker_id: 1, author_id: 1,
+                   status_id: 1, priority: IssuePriority.first,
+                   subject: 'Issue 1' }.merge(attributes))
   end
-
 end

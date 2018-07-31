@@ -7,7 +7,7 @@ Redmine::Plugin.register :redmine_postgresql_search do
   author     'Jens Krämer'
   author_url 'https://jkraemer.net/'
 
-  version '1.0.0'
+  version '1.0.1'
 
   requires_redmine version_or_higher: '3.1.0'
 end

@@ -9,4 +9,3 @@ class ActiveSupport::TestCase
     RedminePostgresqlSearch.rebuild_indices
   end
 end
-

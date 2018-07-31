@@ -7,8 +7,8 @@ module RedminePostgresqlSearch
 
     def index_data
       {}.tap do |data|
-       @mapping.each do |weight, fields|
-         data[weight] = get_value_for_fields fields
+        @mapping.each do |weight, fields|
+          data[weight] = get_value_for_fields fields
         end
       end
     end
@@ -17,7 +17,7 @@ module RedminePostgresqlSearch
       string.to_s.gsub(/[^[:alnum:]]+/, ' ')
     end
 
-    # TODO at the moment this breaks phrase search
+    # TODO: at the moment this breaks phrase search
     def self.sanitize_query_tokens(tokens)
       Array(tokens).map do |token|
         token.to_s.split(/[^[:alnum:]\*]+/).reject(&:blank?)

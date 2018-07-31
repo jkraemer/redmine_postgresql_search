@@ -1,7 +1,8 @@
-Redmine PostgreSQL Search [![Build Status](https://travis-ci.org/jkraemer/redmine_postgresql_search.svg?branch=master)](https://travis-ci.org/jkraemer/redmine_postgresql_search)
+Redmine PostgreSQL Search [![Build Status](https://travis-ci.org/AlphaNodes/redmine_postgresql_search.svg?branch=master)](https://travis-ci.org/AlphaNodes/redmine_postgresql_search)
 =========================
 
 Makes Redmine search use PostgreSQL full text search instead of LIKE queries.
+PostgreSQL 9.6 or above is required.
 
 http://redmine-search.com/
 
@@ -62,14 +63,14 @@ search - I found these two articles quite helpful:
 - http://shisaa.jp/postset/postgresql-full-text-search-part-2.html
 - http://linuxgazette.net/164/sephton.html
 
-### unaccent extension
+### Extensions
 
-The `setup_tsearch` migration attempts to install the _unaccent_ PostgreSQL
-extension, which may fail due to insufficient privileges of your application's
-database user. To get around this, set up the extension manually (`create
-extension unaccent`) using a privileged user account and re-run the plugin
-migrations. On Ubuntu/Debian this extension is part of the `postgresql-contrib`
-package.
+The `setup_tsearch` migration attempts to install the _unaccent_ and _pg\_trgm_
+PostgreSQL extensions, which may fail due to insufficient privileges of your
+application's database user. To get around this, set up the extensions manually
+(`create extension unaccent`, `create extension pg_trgm`) using a privileged user
+account and re-run the plugin migrations.
+On Ubuntu/Debian the extensions are part of the `postgresql-contrib` package.
 
 Known Issues
 ------------
@@ -89,7 +90,6 @@ each journal, so if you have `foo` in the subject and `bar` in a journal entry
 you will find the issue.
 
 
-
 License
 -------
 
@@ -107,5 +107,3 @@ Public License for more details.
 
 You should have received a copy of the GNU General Public License along with
 the plugin. If not, see [www.gnu.org/licenses](http://www.gnu.org/licenses/).
-
-

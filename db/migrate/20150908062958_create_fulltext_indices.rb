@@ -1,10 +1,10 @@
-class CreateFulltextIndices < ActiveRecord::Migration
+class CreateFulltextIndices < Rails.version < '5.2' ? ActiveRecord::Migration : ActiveRecord::Migration[4.2]
   def up
     create_table :fulltext_indices do |t|
       t.references :searchable, polymorphic: true, index: true, unique: true
       t.references :project, index: true
     end
-    execute %{ALTER TABLE fulltext_indices ADD COLUMN tsv TSVECTOR}
+    execute %(ALTER TABLE fulltext_indices ADD COLUMN tsv TSVECTOR)
     execute %{CREATE INDEX fulltext_indices_tsv_idx ON fulltext_indices USING GIN(tsv)}
   end
 
