@@ -35,7 +35,7 @@ module RedminePostgresqlSearch
                      mapping: { a: :subject, b: :description }
 
     setup_searchable Journal,
-                     mapping: { b: :notes, c: -> { journalized.subject if journalized.present? } },
+                     mapping: { b: :notes, c: -> { journalized.subject if journalized.is_a?(Issue) } },
                      project_id: -> { journalized.project_id if journalized.present? },
                      updated_on: -> { created_on }
 
