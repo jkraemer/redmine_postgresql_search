@@ -12,6 +12,7 @@ module RedminePostgresqlSearch
         @tokens = @question.scan(/((\s|^)"[^"]+"(\s|$)|\S+)/).collect { |m| m.first.gsub(/(^\s*"\s*|\s*"\s*$)/, '') }
         # tokens must be at least 2 characters long
         @tokens = Tokenizer.sanitize_query_tokens(@tokens)
+        @tokens = @tokens.uniq.select { |w| w.length > 1 }
 
         return if options[:all_words]
 
