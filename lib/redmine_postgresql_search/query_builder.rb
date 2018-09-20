@@ -4,6 +4,7 @@ module RedminePostgresqlSearch
       @tokens = tokens
       @titles_only = options[:titles_only]
       @all_words = options[:all_words]
+      @fuzzy_matches = options[:fuzzy_matches]
     end
 
     def to_sql
@@ -16,31 +17,19 @@ module RedminePostgresqlSearch
 
     private
 
-    def sanitized_tokens
-      Tokenizer.sanitize_query_tokens @tokens
-    end
-
     def searchable_query
       if @all_words
-        if @titles_only
-          sanitized_tokens.map { |token| "#{token}:A" }
-        else
-          sanitized_tokens
-        end.join ' & '
+        op = '&'
+        tokens = @tokens
       else
-        sanitized_tokens.map do |token|
-          sql = "SELECT word FROM fulltext_words WHERE '#{token}' <% word"
-          fuzzy_matches = ActiveRecord::Base.connection.execute(sql).field_values('word')
-
-          query_words =
-            if @titles_only
-              fuzzy_matches.map { |word| "#{word}:A" } + [token + ':A']
-            else
-              fuzzy_matches + [token]
-            end
-          query_words
-        end.flatten.join '|'
+        op = '|'
+        tokens = @fuzzy_matches + @tokens
       end
+      if @titles_only
+        tokens.map { |token| "#{token}:A" }
+      else
+        tokens
+      end.join(op)
     end
   end
 end
