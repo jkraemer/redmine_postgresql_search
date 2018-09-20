@@ -2,7 +2,6 @@ module RedminePostgresqlSearch
   module Patches
     module Fetcher
       # override the original initialize for different token parsing:
-      # keep trailing * to trigger prefix queries
       # allow any number of tokens of any length
       def initialize(question, user, scope, projects, options = {})
         super
@@ -14,7 +13,7 @@ module RedminePostgresqlSearch
         @tokens = Tokenizer.sanitize_query_tokens(@tokens)
         @tokens = @tokens.uniq.select { |w| w.length > 1 }
 
-        return if options[:all_words]
+        return if options[:all_words] || @tokens.blank?
 
         # create additional search tokens by querying a word table for fuzzy matches
         # the <% operator selects words with at least 60% word similarity (see PostgreSQL's pg_trgm docs)

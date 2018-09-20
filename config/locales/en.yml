@@ -1,0 +1,4 @@
+en:
+  label_postgresql_search_title: PostgreSQL Full Text Search
+  label_postgresql_search_all_words: Exact matches for all words only
+  label_postgresql_search_all_words_by_default: Search for exact matches only for all words by default
