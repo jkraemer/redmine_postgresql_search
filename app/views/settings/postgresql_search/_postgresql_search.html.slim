@@ -1,2 +1,4 @@
-= render_tabs [{ name: 'general', partial: 'settings/postgresql_search/general', label: :label_general }]
+- @settings = ActionController::Parameters.new(@settings)
+= render_tabs [{ name: 'general', partial: 'settings/postgresql_search/general', label: :label_general },
+               { name: 'info', partial: 'settings/postgresql_search/info', label: :label_information_plural }]
 - html_title(l(:label_settings), l(:label_postgresql_search))

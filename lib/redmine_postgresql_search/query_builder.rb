@@ -18,13 +18,16 @@ module RedminePostgresqlSearch
     private
 
     def searchable_query
-      if @all_words
-        op = '&'
-        tokens = @tokens
-      else
-        op = '|'
-        tokens = @fuzzy_matches + @tokens
-      end
+      tokens = if @all_words
+                 op = '&'
+                 @tokens
+               else
+                 op = '|'
+                 @fuzzy_matches + @tokens
+               end
+
+      #binding.pry
+
       if @titles_only
         tokens.map { |token| "#{token}:A" }
       else

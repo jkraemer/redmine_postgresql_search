@@ -5,14 +5,7 @@ module RedminePostgresqlSearch
       # allow any number of tokens of any length
       def initialize(question, user, scope, projects, options = {})
         super
-
-        # extract tokens from the question
-        # eg. hello "bye bye" => ["hello", "bye bye"]
-        @tokens = @question.scan(/((\s|^)"[^"]+"(\s|$)|\S+)/).collect { |m| m.first.gsub(/(^\s*"\s*|\s*"\s*$)/, '') }
-        # tokens must be at least 2 characters long
-        @tokens = Tokenizer.sanitize_query_tokens(@tokens)
-        @tokens = @tokens.uniq.select { |w| w.length > 1 }
-
+        @tokens = Tokenizer.build_tokens(@question)
         return if options[:all_words] || @tokens.blank?
 
         # create additional search tokens by querying a word table for fuzzy matches

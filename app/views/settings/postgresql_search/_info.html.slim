@@ -1,0 +1,12 @@
+table
+  thead
+    tr
+      th = l(:field_name)
+      th = l(:field_value)
+  tbody
+    tr
+      td = l(:label_fulltext_indices_count)
+      td = FulltextStatistic.indices_count
+    tr
+      td = l(:label_trigram_words_count)
+      td = FulltextStatistic.words_count

@@ -4,19 +4,13 @@ Redmine::Plugin.register :redmine_postgresql_search do
 
   description 'This plugin adds advanced fulltext search capabilities to Redmine. PostgreSQL required.'
 
-  author     'Jens Krämer'
-  author_url 'https://jkraemer.net/'
+  author 'Jens Krämer/AlphaNodes'
 
-  version '1.0.1'
+  version '1.0.2'
 
   settings default: {
     all_words_by_default: 0
   }, partial: 'settings/postgresql_search/postgresql_search'
-
-  menu :admin_menu,
-       :postgresql_search,
-       { controller: 'settings', action: 'plugin', id: 'redmine_postgresql_search' },
-       caption: :label_postgresql_search_title
 
   requires_redmine version_or_higher: '3.1.0'
 end
