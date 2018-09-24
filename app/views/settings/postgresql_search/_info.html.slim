@@ -10,3 +10,15 @@ table
     tr
       td = l(:label_trigram_words_count)
       td = FulltextStatistic.words_count
+    tr
+      td = l(:label_fulltext_last_issue_id)
+      - issue_id = FulltextStatistic.last_issue_id
+      td
+        - if issue_id.present?
+          = link_to_issue(Issue.find_by(id: issue_id))
+    tr
+      td = l(:label_fulltext_last_issue_words)
+      td = FulltextStatistic.last_issue_words
+    tr
+      td = l(:label_fulltext_last_journal_words)
+      td = FulltextStatistic.last_journal_words

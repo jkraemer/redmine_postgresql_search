@@ -4,3 +4,7 @@ de:
   label_postgresql_search_all_words_by_default: Standardmäßig nur nach exakten Treffen für alle Wörter suchen
   label_fulltext_indices_count: Volltextindex
   label_trigram_words_count: Trigram Wörter
+  label_fulltext_last_issue_id: Letzte Ticket ID
+  label_fulltext_last_issue_words: Letzte Ticket Wörter
+  label_fulltext_last_journal_words: Letzte Journal Wörter
+  label_fulltext_update_time_factor: Aktualität-Faktor für Suchergebnis

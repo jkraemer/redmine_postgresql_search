@@ -1,3 +1,12 @@
 p
+  = label_tag 'settings[update_time_factor]', l(:label_fulltext_update_time_factor)
+  = number_field_tag 'settings[update_time_factor]',
+                     @settings[:update_time_factor],
+                     min: 0.01,
+                     max: 100.00,
+                     step: '0.01',
+                     size: 5,
+                     required: true
+p
   = label_tag 'settings[all_words_by_default]', l(:label_postgresql_search_all_words_by_default)
   = check_box_tag 'settings[all_words_by_default]', 1, @settings[:all_words_by_default].to_i == 1

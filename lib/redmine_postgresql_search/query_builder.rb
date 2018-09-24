@@ -26,8 +26,6 @@ module RedminePostgresqlSearch
                  @fuzzy_matches + @tokens
                end
 
-      #binding.pry
-
       if @titles_only
         tokens.map { |token| "#{token}:A" }
       else

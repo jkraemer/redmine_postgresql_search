@@ -54,43 +54,56 @@ module RedminePostgresqlSearch
     load 'redmine_postgresql_search/test_support.rb' if Rails.env.test?
   end
 
-  def self.rebuild_indices
-    @searchables.each(&:rebuild_index)
-  end
+  class << self
+    def settings
+      ActionController::Parameters.new(Setting[:plugin_redmine_postgresql_search])
+    end
 
-  def self.setup_searchable(clazz, options = {})
-    @searchables << clazz
-    clazz.class_eval do
-      has_one :fulltext_index, as: :searchable, dependent: :delete
-      if (condition = options[:if])
-        define_method :add_to_index? do
-          !!(instance_exec(&condition))
+    def setting?(value)
+      return true if settings[value].to_i == 1
+
+      false
+    end
+
+
+    def rebuild_indices
+      @searchables.each(&:rebuild_index)
+    end
+
+    def setup_searchable(clazz, options = {})
+      @searchables << clazz
+      clazz.class_eval do
+        has_one :fulltext_index, as: :searchable, dependent: :delete
+        if (condition = options[:if])
+          define_method :add_to_index? do
+            !!(instance_exec(&condition))
+          end
+        else
+          define_method :add_to_index? do
+            true
+          end
         end
-      else
-        define_method :add_to_index? do
-          true
+        after_commit :update_fulltext_index
+
+        define_method :index_data do
+          Tokenizer.new(self, options[:mapping]).index_data
         end
-      end
-      after_commit :update_fulltext_index
 
-      define_method :index_data do
-        Tokenizer.new(self, options[:mapping]).index_data
-      end
-
-      if (getter = options[:project_id])
-        define_method :project_id do
-          instance_exec(&getter)
+        if (getter = options[:project_id])
+          define_method :project_id do
+            instance_exec(&getter)
+          end
         end
-      end
 
-      if (getter = options[:updated_on])
-        define_method :updated_on do
-          instance_exec(&getter)
+        if (getter = options[:updated_on])
+          define_method :updated_on do
+            instance_exec(&getter)
+          end
         end
-      end
 
-      prepend RedminePostgresqlSearch::Patches::Searchable::InstanceMethods
-      extend RedminePostgresqlSearch::Patches::Searchable::ClassMethods
+        prepend RedminePostgresqlSearch::Patches::Searchable::InstanceMethods
+        extend RedminePostgresqlSearch::Patches::Searchable::ClassMethods
+      end
     end
   end
 end

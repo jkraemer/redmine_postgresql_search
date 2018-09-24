@@ -61,11 +61,14 @@ module RedminePostgresqlSearch
 
           @already_found.any? && scope = scope.where("#{searchable_id} NOT IN (?)", @already_found)
 
+          update_time_factor = RedminePostgresqlSearch.settings[:update_time_factor].presence || 0.1
+
           # 1 | 32 - rank normalization by document length, see
           # http://www.postgresql.org/docs/current/static/textsearch-controls.html#TEXTSEARCH-RANKING
           # ts_rank is scaled depending on searchable age (updated_on) with the function e^(-age / 500) with a minimum of 0.1
           scope.pluck(Arel.sql(['ts_rank(tsv, query, 1|32)' \
-                ' * greatest(exp(extract(epoch from age(coalesce(fulltext_indices.updated_on, now()), now())) / 86400 / 300), 0.1)' \
+                ' * greatest(exp(extract(epoch from age(coalesce(fulltext_indices.updated_on, now()), now())) / 86400 / 300),' \
+                "#{update_time_factor})" \
                 ' as score', searchable_id].join(', '))).tap do |result|
             result.each do |r|
               r[0] = (r[0] * 10_000).to_i
