@@ -10,7 +10,7 @@ Redmine::Plugin.register :redmine_postgresql_search do
   version '1.0.1'
 
   settings default: {
-    all_words_by_default: 0,
+    all_words_by_default: 0
   }, partial: 'settings/postgresql_search/postgresql_search'
 
   menu :admin_menu,

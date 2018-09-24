@@ -78,6 +78,7 @@ module RedminePostgresqlSearch
       module InstanceMethods
         def update_fulltext_index
           return unless add_to_index?
+
           unless fulltext_index.present? && fulltext_index.destroyed?
             project_id = try(:project_id)
             updated_on = try(:updated_on)

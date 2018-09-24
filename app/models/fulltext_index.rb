@@ -19,6 +19,7 @@ class FulltextIndex < ActiveRecord::Base
         weight = weight.to_s.upcase
         raise "illegal weight key #{weight}" unless WEIGHTS.include?(weight)
         next if value.blank?
+
         values << self.class.connection.quote(value)
         weights << self.class.connection.quote(weight)
       end

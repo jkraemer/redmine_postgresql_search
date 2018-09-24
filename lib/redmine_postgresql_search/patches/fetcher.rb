@@ -17,7 +17,7 @@ module RedminePostgresqlSearch
 
         # create additional search tokens by querying a word table for fuzzy matches
         # the <% operator selects words with at least 60% word similarity (see PostgreSQL's pg_trgm docs)
-        sql = 'SELECT word FROM fulltext_words WHERE ' + @tokens.map { |t| "'#{t}' <% word" }.join(' OR ' )
+        sql = 'SELECT word FROM fulltext_words WHERE ' + @tokens.map { |t| "'#{t}' <% word" }.join(' OR ')
         @options[:fuzzy_matches] = ActiveRecord::Base.connection.execute(sql).field_values('word')
       end
     end
