@@ -36,7 +36,6 @@ module RedminePostgresqlSearch
       day_seconds = 60 * 60 * 24
       age_weight_lifetime = RedminePostgresqlSearch.settings[:age_weight_lifetime] || 365
       age_weight_min = RedminePostgresqlSearch.settings[:age_weight_min] || 0.1
-      binding.pry
       'ts_rank(tsv, query, 1|32) *' \
       " greatest(exp(-#{age} / #{day_seconds} / #{age_weight_lifetime}), #{age_weight_min})"
     end
