@@ -7,7 +7,8 @@ class SearchControllerTest < Redmine::ControllerTest
            :workflows,
            :custom_fields, :custom_values,
            :custom_fields_projects, :custom_fields_trackers,
-           :repositories, :changesets
+           :repositories, :changesets,
+           :wikis, :wiki_pages, :wiki_contents
 
   def setup
     User.current = nil
@@ -209,7 +210,7 @@ class SearchControllerTest < Redmine::ControllerTest
     assert_select 'input[name=all_words]:not([checked])'
     assert_select '#search-results' do
       assert_select 'dt.issue', text: / #3 /
-      assert_select 'dt', 3
+      assert_select 'dt', 4
     end
   end
 
