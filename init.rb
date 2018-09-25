@@ -10,7 +10,8 @@ Redmine::Plugin.register :redmine_postgresql_search do
 
   settings default: {
     all_words_by_default: 1,
-    update_time_factor: 0.1
+    age_weight_min: 0.1,
+    age_weight_lifetime: 365
   }, partial: 'settings/postgresql_search/postgresql_search'
 
   requires_redmine version_or_higher: '3.1.0'

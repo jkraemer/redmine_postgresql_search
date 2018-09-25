@@ -33,22 +33,23 @@ module RedminePostgresqlSearch
     def ts_rank
       # now - (timestamp in the past or now if null)
       age = "extract(epoch from age(now(), coalesce(#{FulltextIndex.table_name}.updated_on, now())))"
-      age_weight_cutoff = 0.1
-      age_weight_slope = 300
       day_seconds = 60 * 60 * 24
+      age_weight_lifetime = RedminePostgresqlSearch.settings[:age_weight_lifetime] || 365
+      age_weight_min = RedminePostgresqlSearch.settings[:age_weight_min] || 0.1
+      binding.pry
       'ts_rank(tsv, query, 1|32) *' \
-      " greatest(exp(-#{age} / #{day_seconds} / #{age_weight_slope}), #{age_weight_cutoff})"
+      " greatest(exp(-#{age} / #{day_seconds} / #{age_weight_lifetime}), #{age_weight_min})"
     end
 
     # Builds the fts query string for Postgres.
     def searchable_query
-      tokens = if @all_words
-                 op = '&'
-                 @tokens
-               else
-                 op = '|'
-                 @fuzzy_matches + @tokens
-               end
+      if @all_words
+        op = '&'
+        tokens = @tokens
+      else
+        op = '|'
+        tokens = @fuzzy_matches.present? ? @fuzzy_matches + @tokens : @tokens
+      end
 
       if @titles_only
         tokens.map { |token| "#{token}:A" }

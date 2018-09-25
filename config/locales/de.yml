@@ -7,4 +7,5 @@ de:
   label_fulltext_last_issue_id: Letzte Ticket ID
   label_fulltext_last_issue_words: Letzte Ticket Wörter
   label_fulltext_last_journal_words: Letzte Journal Wörter
-  label_fulltext_update_time_factor: Aktualität-Faktor für Suchergebnis
+  label_postgresql_search_age_weight_min: Untere Grenze für Alters-Gewichtung
+  label_postgresql_search_age_weight_lifetime: Lebenszeit für Alters-Gewichtung

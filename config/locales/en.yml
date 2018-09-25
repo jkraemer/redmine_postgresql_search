@@ -7,4 +7,5 @@ en:
   label_fulltext_last_issue_id: Last issue ID
   label_fulltext_last_issue_words: Last issue words
   label_fulltext_last_journal_words: Last journal words
-  label_fulltext_update_time_factor: Update factor for search results
+  label_postgresql_search_age_weight_min: lower limit for age factor
+  label_postgresql_search_age_weight_lifetime: lifetime for age factor
