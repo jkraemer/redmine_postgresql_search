@@ -2,13 +2,13 @@ require File.expand_path('../../test_helper', __FILE__)
 
 class QueryBuilderTest < RedminePostgresqlSearchTest
   test 'should build all words query' do
-    assert_query 'find & foo',
-                 'find foo', all_words: true
+    assert_query 'find&foo',
+                 %w[find foo], all_words: true
   end
 
   test 'should build only titles query' do
-    assert_query 'find:A & foo:A',
-                 'find foo', all_words: true, titles_only: true
+    assert_query 'find:A&foo:A',
+                 %w[find foo], all_words: true, titles_only: true
   end
 
   private
