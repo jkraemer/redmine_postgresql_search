@@ -1,7 +1,10 @@
 module RedminePostgresqlSearch
   def self.setup
     Rails.logger.info 'enabling advanced PostgreSQL search'
-    Additionals.patch(%w[SearchController], 'redmine_postgresql_search')
+
+    SearchController.class_eval do
+      prepend Patches::SearchController
+    end
 
     Redmine::Search::Fetcher.class_eval do
       prepend Patches::Fetcher
