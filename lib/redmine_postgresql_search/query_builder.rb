@@ -31,8 +31,25 @@ module RedminePostgresqlSearch
     def ts_query
       FulltextIndex.send :sanitize_sql_array, [
         'to_tsquery(:config, :query) query',
-        config: FulltextIndex::SEARCH_CONFIG, query: searchable_query
+        config: FulltextIndex::SEARCH_CONFIG, query: search_query
       ]
+    end
+
+    # Builds the fts query string for Postgres.
+    def search_query
+      if @all_words
+        op = '&'
+        tokens = @tokens
+      else
+        op = '|'
+        tokens = @fuzzy_matches.present? ? @fuzzy_matches + @tokens : @tokens
+      end
+
+      if @titles_only
+        tokens.map { |token| "#{token}:A" }
+      else
+        tokens
+      end.join(op)
     end
 
     # Calculates the score for a search result.
@@ -42,18 +59,26 @@ module RedminePostgresqlSearch
       day_seconds = 60 * 60 * 24
       age_weight_lifetime = RedminePostgresqlSearch.settings[:age_weight_lifetime] || 365
       age_weight_min = RedminePostgresqlSearch.settings[:age_weight_min] || 0.1
-      'ts_rank(tsv, query, 1|32) *' \
+      # ts_rank can be zero if fuzzy matching is used. Add a little constant to avoid nulling the rank.
+      "(0.01 + ts_rank(tsv, #{ranking_ts_query}, 1|32)) *" \
       " greatest(exp(-#{age} / #{day_seconds} / #{age_weight_lifetime}), #{age_weight_min})"
     end
 
-    # Builds the fts query string for Postgres.
-    def searchable_query
+    # Creates the query vector that is used to rank the results.
+    def ranking_ts_query
+      FulltextIndex.send :sanitize_sql_array, [
+        'to_tsquery(:config, :query)',
+        config: FulltextIndex::SEARCH_CONFIG, query: ranking_query
+      ]
+    end
+
+    def ranking_query
       if @all_words
         op = '&'
         tokens = @tokens
       else
         op = '|'
-        tokens = @fuzzy_matches.present? ? @fuzzy_matches + @tokens : @tokens
+        tokens = @tokens
       end
 
       if @titles_only
