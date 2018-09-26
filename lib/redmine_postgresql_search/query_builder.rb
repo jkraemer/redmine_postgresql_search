@@ -1,10 +1,16 @@
 module RedminePostgresqlSearch
   class QueryBuilder
+    # !tokens must be safe for a SQL string or you will create a possibility for SQL injection!
     def initialize(tokens, options = {})
       @tokens = tokens
       @titles_only = options[:titles_only]
       @all_words = options[:all_words]
-      @fuzzy_matches = options[:fuzzy_matches]
+      return if options[:all_words]
+
+      # create additional search tokens by querying a word table for fuzzy matches
+      # the <% operator selects words with at least 60% word similarity (see PostgreSQL's pg_trgm docs)
+      sql = 'SELECT word FROM fulltext_words WHERE ' + @tokens.map { |t| "'#{t}' <% word" }.join(' OR ')
+      @fuzzy_matches = ActiveRecord::Base.connection.execute(sql).field_values('word')
     end
 
     # This is the common table expression (CTE) which does the actual full text search search.
