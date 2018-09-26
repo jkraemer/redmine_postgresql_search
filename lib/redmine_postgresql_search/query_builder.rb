@@ -5,6 +5,7 @@ module RedminePostgresqlSearch
       @tokens = tokens
       @titles_only = options[:titles_only]
       @all_words = options[:all_words]
+      @limit = options[:limit]
       return if options[:all_words]
 
       # create additional search tokens by querying a word table for fuzzy matches
@@ -13,19 +14,40 @@ module RedminePostgresqlSearch
       @fuzzy_matches = ActiveRecord::Base.connection.execute(sql).field_values('word')
     end
 
+    def search_sql(queries_with_scope)
+      union_sql = queries_with_scope.map do |scope, q|
+        q.select(:id, 'fts.tsv', 'fts.updated_on', "'#{scope}' AS scope").to_sql
+      end.join(' UNION ')
+
+      limit_sql = "LIMIT #{@limit}" if @limit
+      sq = ['SELECT DISTINCT ON (scope, id) scope, id, tsv, updated_on,',
+            "#{ts_rank} AS score",
+            "FROM (#{union_sql}) q",
+            'ORDER BY scope, id, score DESC'].join("\n")
+      sql = [fts_cte,
+             'SELECT scope, id',
+             'FROM (',
+             sq,
+             ') q2',
+             'ORDER BY q2.score DESC',
+             limit_sql].compact.join("\n")
+      sql
+    end
+
+    protected
+
     # This is the common table expression (CTE) which does the actual full text search search.
     # It produces search results for all Searchables (ignoring visibility and everything else).
     # The result can be reused by all Searchable queries.
     def fts_cte
-      'WITH fts AS' \
-      " (SELECT #{ts_rank} AS score" \
-      ', searchable_id' \
+      'WITH fts AS (SELECT' \
+      ' searchable_id' \
       ', searchable_type' \
+      ', tsv' \
+      ', updated_on' \
       " FROM #{FulltextIndex.table_name}, #{ts_query}" \
       ' WHERE query @@ tsv)'
     end
-
-    protected
 
     # Creates the query vector that is matched against the tsvector tsv from the search table.
     def ts_query
@@ -55,7 +77,7 @@ module RedminePostgresqlSearch
     # Calculates the score for a search result.
     def ts_rank
       # now - (timestamp in the past or now if null)
-      age = "extract(epoch from age(now(), coalesce(#{FulltextIndex.table_name}.updated_on, now())))"
+      age = 'extract(epoch from age(now(), coalesce(updated_on, now())))'
       day_seconds = 60 * 60 * 24
       age_weight_lifetime = RedminePostgresqlSearch.settings[:age_weight_lifetime] || 365
       age_weight_min = RedminePostgresqlSearch.settings[:age_weight_min] || 0.1
@@ -73,18 +95,12 @@ module RedminePostgresqlSearch
     end
 
     def ranking_query
-      if @all_words
-        op = '&'
-        tokens = @tokens
-      else
-        op = '|'
-        tokens = @tokens
-      end
+      op = @all_words ? '&' : '|'
 
       if @titles_only
-        tokens.map { |token| "#{token}:A" }
+        @tokens.map { |token| "#{token}:A" }
       else
-        tokens
+        @tokens
       end.join(op)
     end
   end

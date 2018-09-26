@@ -13,7 +13,7 @@ class QueryBuilderTest < RedminePostgresqlSearchTest
 
   test 'ts_rank should respect settings' do
     with_postgresql_search_settings(age_weight_min: 0.23, age_weight_lifetime: 234) do
-      ts_rank = query_builder([], { all_words: true }).fts_cte
+      ts_rank = query_builder([], all_words: true).search_sql([])
       assert_match '234', ts_rank
       assert_match '0.23', ts_rank
     end

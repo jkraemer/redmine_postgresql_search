@@ -27,15 +27,7 @@ module RedminePostgresqlSearch
           queries_with_scope += klass.search_queries(@tokens, User.current, @projects, @options).map { |q| [scope, q] }
         end
 
-        union_sql = queries_with_scope.map { |scope, q| q.select(:id, :score, "'#{scope}' AS scope").to_sql }.join(' UNION ')
-        subquery_sql = [union_sql, 'ORDER BY score DESC'].join("\n")
-
-        limit = @options[:limit]
-        limit_sql = "LIMIT #{limit}" if limit
-        sql = [@query_builder.fts_cte,
-               "SELECT scope, id FROM (SELECT DISTINCT ON (scope, id) scope, id, score FROM (#{subquery_sql}) q ) q2",
-               'ORDER BY q2.score DESC, id',
-               limit_sql].compact.join("\n")
+        sql = @query_builder.search_sql(queries_with_scope)
         result = ActiveRecord::Base.connection.execute(sql)
         # with Redmine 3, id is returned as a string
         # with Redmine 4, an int is returned
