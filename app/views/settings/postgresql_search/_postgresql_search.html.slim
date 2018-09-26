@@ -1,4 +1,5 @@
-- @settings = ActionController::Parameters.new(@settings)
+- @settings = ActionController::Parameters.new(@settings) unless Rails.version >= '5.2'
+
 = render_tabs [{ name: 'general', partial: 'settings/postgresql_search/general', label: :label_general },
                { name: 'ranking', partial: 'settings/postgresql_search/ranking', label: :label_postgresql_search_ranking },
                { name: 'info', partial: 'settings/postgresql_search/info', label: :label_information_plural }]
