@@ -6,9 +6,11 @@ PostgreSQL 9.6 or above is required.
 
 http://redmine-search.com/
 
-
 Installation
 ------------
+
+The [additionals](https://github.com/AlphaNodes/additionals) plugin is needed for this plugin.
+Install it first if you don't use it yet.
 
 Follow the generic [Redmine plugin installation
 instructions](https://redmine.org/projects/redmine/wiki/Plugins), but with a
@@ -76,8 +78,7 @@ Known Issues
 ------------
 
 Please report any issues not mentioned here [on
-Github](https://github.com/jkraemer/redmine_postgresql_search/issues).
-
+Github](https://github.com/AlphaNodes/redmine_postgresql_search/issues).
 
 ### Result Completeness
 
@@ -89,11 +90,11 @@ make things a little better this plugin indexes the issue's subject along with
 each journal, so if you have `foo` in the subject and `bar` in a journal entry
 you will find the issue.
 
-
 License
 -------
 
 Copyright (C) 2015 [Jens Krämer](https://jkraemer.net)
+Copyright (C) 2018 [AlphaNodes GmbH](https://alphanodes.com)
 
 The Postgresql Search plugin for Redmine is free software: you can redistribute
 it and/or modify it under the terms of the GNU General Public License as
