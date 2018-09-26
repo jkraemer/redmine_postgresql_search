@@ -19,6 +19,7 @@ module RedminePostgresqlSearch
 
       def load_result_ids
         return [] if @tokens.blank?
+
         queries_with_scope = []
 
         @scopes_without_postgresql_search = []
@@ -36,7 +37,6 @@ module RedminePostgresqlSearch
         union_sql = queries_with_scope.map { |scope, q| q.select(:id, :score, "'#{scope}' AS scope").to_sql }.join(' UNION ')
         subquery_sql = [union_sql, 'ORDER BY score DESC'].join("\n")
 
-        sort_sql =
         limit = @options[:limit]
         limit_sql = "LIMIT #{limit}" if limit
         sql = [@query_builder.fts_cte,

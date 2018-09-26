@@ -55,7 +55,11 @@ module RedminePostgresqlSearch
   end
 
   def self.settings
-    ActionController::Parameters.new(Setting[:plugin_redmine_postgresql_search])
+    if Rails.version >= '5.2'
+      Setting[:plugin_redmine_postgresql_search]
+    else
+      ActionController::Parameters.new(Setting[:plugin_redmine_postgresql_search])
+    end
   end
 
   def self.setting?(value)
