@@ -1,21 +1,3 @@
 p
-  = label_tag 'settings[age_weight_lifetime]', l(:label_postgresql_search_age_weight_lifetime)
-  = number_field_tag 'settings[age_weight_lifetime]',
-                     @settings[:age_weight_lifetime] || 365,
-                     min: 1,
-                     max: 1000.00,
-                     step: '1',
-                     size: 5,
-                     required: true
-p
-  = label_tag 'settings[age_weight_min]', l(:label_postgresql_search_age_weight_min)
-  = number_field_tag 'settings[age_weight_min]',
-                     @settings[:age_weight_min] || 0.1,
-                     min: 0.0,
-                     max: 0.5,
-                     step: '0.05',
-                     size: 5,
-                     required: true
-p
   = label_tag 'settings[all_words_by_default]', l(:label_postgresql_search_all_words_by_default)
   = check_box_tag 'settings[all_words_by_default]', 1, @settings[:all_words_by_default].to_i == 1
