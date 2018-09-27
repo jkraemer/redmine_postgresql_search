@@ -12,47 +12,40 @@ module RedminePostgresqlSearch
 
     @searchables = []
 
-    setup_searchable Attachment,
-                     mapping: { a: :filename, b: :description },
-                     project_id: -> { container.project_id if container.respond_to?(:project_id) },
-                     updated_on: -> { created_on }
-
     setup_searchable Changeset,
                      mapping: { b: :comments },
-                     project_id: -> { repository.project_id if repository.present? },
-                     updated_on: -> { committed_on }
-
-    setup_searchable CustomValue,
-                     if: -> { customized.is_a?(Issue) },
-                     mapping: { b: :value },
-                     project_id: -> { customized.project_id if customized.present? },
-                     updated_on: -> { customized.updated_on if customized.present? }
+                     last_modification_field: "#{Changeset.table_name}.committed_on"
 
     setup_searchable Document,
                      mapping: { a: :title, b: :description },
-                     updated_on: -> { created_on }
+                     last_modification_field: "#{Document.table_name}.created_on"
 
     setup_searchable Issue,
-                     mapping: { a: :subject, b: :description },
-                     last_modification_field: "#{Issue.table_name}.updated_on"
-
-    setup_searchable Journal,
-                     mapping: { b: :notes, c: -> { journalized.subject if journalized.is_a?(Issue) } },
-                     project_id: -> { journalized.project_id if journalized.present? },
-                     updated_on: -> { created_on }
+                     mapping: { a: :subject, b: :description }
 
     setup_searchable Message,
                      mapping: { a: :subject, b: :content }
 
     setup_searchable News,
                      mapping: { a: :title, b: :summary, c: :description },
-                     updated_on: -> { created_on }
+                     last_modification_field: "#{News.table_name}.created_on"
 
     setup_searchable WikiPage,
                      mapping: { a: :title, b: -> { content.text if content.present? } },
-                     project_id: -> { wiki.project_id if wiki.present? },
-                     updated_on: -> { content.updated_on if content.present? },
                      last_modification_field: "#{WikiContent.table_name}.updated_on"
+
+    # Searchables that depend on another Searchable and cannot be searched separately.
+    # They use the last modification field of their parents.
+
+    setup_searchable Attachment,
+                     mapping: { a: :filename, b: :description }
+
+    setup_searchable CustomValue,
+                     if: -> { customized.is_a?(Issue) },
+                     mapping: { b: :value }
+
+    setup_searchable Journal,
+                     mapping: { b: :notes, c: -> { journalized.subject if journalized.is_a?(Issue) } }
 
     load 'redmine_postgresql_search/test_support.rb' if Rails.env.test?
   end
@@ -94,20 +87,10 @@ module RedminePostgresqlSearch
         Tokenizer.new(self, options[:mapping]).index_data
       end
 
-      if (getter = options[:project_id])
-        define_method :project_id do
-          instance_exec(&getter)
-        end
-      end
-
-      if (getter = options[:updated_on])
-        define_method :updated_on do
-          instance_exec(&getter)
-        end
-      end
+      last_modification_field = options[:last_modification_field].presence || clazz.table_name + '.updated_on'
 
       define_singleton_method :last_modification_field do
-        options[:last_modification_field]
+        last_modification_field
       end
 
       prepend RedminePostgresqlSearch::Patches::Searchable::InstanceMethods

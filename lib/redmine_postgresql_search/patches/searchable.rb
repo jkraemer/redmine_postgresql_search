@@ -78,12 +78,8 @@ module RedminePostgresqlSearch
           return unless add_to_index?
 
           unless fulltext_index.present? && fulltext_index.destroyed?
-            project_id = try(:project_id)
-            updated_on = try(:updated_on)
-            if fulltext_index.present?
-              fulltext_index.update(project_id: project_id, updated_on: updated_on)
-            elsif fulltext_index.blank?
-              self.fulltext_index = FulltextIndex.create(searchable: self, project_id: project_id, updated_on: updated_on)
+            if fulltext_index.blank?
+              self.fulltext_index = FulltextIndex.create(searchable: self)
             end
           end
           fulltext_index.update_index!
