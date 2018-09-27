@@ -33,7 +33,8 @@ module RedminePostgresqlSearch
                      updated_on: -> { created_on }
 
     setup_searchable Issue,
-                     mapping: { a: :subject, b: :description }
+                     mapping: { a: :subject, b: :description },
+                     last_modification_field: "#{Issue.table_name}.updated_on"
 
     setup_searchable Journal,
                      mapping: { b: :notes, c: -> { journalized.subject if journalized.is_a?(Issue) } },
@@ -50,7 +51,8 @@ module RedminePostgresqlSearch
     setup_searchable WikiPage,
                      mapping: { a: :title, b: -> { content.text if content.present? } },
                      project_id: -> { wiki.project_id if wiki.present? },
-                     updated_on: -> { content.updated_on if content.present? }
+                     updated_on: -> { content.updated_on if content.present? },
+                     last_modification_field: "#{WikiContent.table_name}.updated_on"
 
     load 'redmine_postgresql_search/test_support.rb' if Rails.env.test?
   end
