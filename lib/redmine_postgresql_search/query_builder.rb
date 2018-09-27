@@ -14,9 +14,11 @@ module RedminePostgresqlSearch
       @fuzzy_matches = ActiveRecord::Base.connection.execute(sql).field_values('word')
     end
 
-    def search_sql(queries_with_scope)
+    def search_sql(queries_with_scope, scope_options = {})
       union_sql = queries_with_scope.map do |scope, q|
-        q.select(:id, 'fts.tsv', 'fts.updated_on', "'#{scope}' AS scope").to_sql
+        last_modification_field = scope_options[scope][:last_modification_field]
+        age_field = last_modification_field.presence || 'fts.updated_on'
+        q.select(:id, 'fts.tsv', age_field, "'#{scope}' AS scope").to_sql
       end.join(' UNION ')
 
       limit_sql = "LIMIT #{@limit}" if @limit

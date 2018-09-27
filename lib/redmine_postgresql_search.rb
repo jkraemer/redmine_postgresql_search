@@ -79,7 +79,7 @@ module RedminePostgresqlSearch
       has_one :fulltext_index, as: :searchable, dependent: :delete
       if (condition = options[:if])
         define_method :add_to_index? do
-          !!(instance_exec(&condition))
+          !!instance_exec(&condition)
         end
       else
         define_method :add_to_index? do
@@ -103,6 +103,11 @@ module RedminePostgresqlSearch
           instance_exec(&getter)
         end
       end
+
+      define_singleton_method :last_modification_field do
+        options[:last_modification_field]
+      end
+
       prepend RedminePostgresqlSearch::Patches::Searchable::InstanceMethods
       extend RedminePostgresqlSearch::Patches::Searchable::ClassMethods
     end

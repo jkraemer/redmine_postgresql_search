@@ -14,6 +14,7 @@ module RedminePostgresqlSearch
         return [] if @tokens.blank?
 
         queries_with_scope = []
+        scope_options = {}
 
         @scopes_without_postgresql_search = []
 
@@ -25,9 +26,11 @@ module RedminePostgresqlSearch
             next
           end
           queries_with_scope += klass.search_queries(@tokens, User.current, @projects, @options).map { |q| [scope, q] }
+          scope_options[scope] = {}
+          scope_options[scope][:last_modification_field] = klass.last_modification_field
         end
 
-        sql = @query_builder.search_sql(queries_with_scope)
+        sql = @query_builder.search_sql(queries_with_scope, scope_options)
         result = ActiveRecord::Base.connection.execute(sql)
         # with Redmine 3, id is returned as a string
         # with Redmine 4, an int is returned
