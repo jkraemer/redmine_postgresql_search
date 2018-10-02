@@ -17,7 +17,7 @@ module RedminePostgresqlSearch
     def search_sql(queries_with_scope, scope_options = {})
       union_sql = queries_with_scope.map do |scope, q|
         last_modification_field = scope_options[scope][:last_modification_field]
-        q.select(:id, 'fts.tsv', last_modification_field, "'#{scope}' AS scope").to_sql
+        q.select(:id, 'fts.tsv', "#{last_modification_field} AS updated_on", "'#{scope}' AS scope").to_sql
       end.join(' UNION ')
 
       limit_sql = "LIMIT #{@limit}" if @limit
