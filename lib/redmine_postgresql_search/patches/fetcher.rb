@@ -7,6 +7,7 @@ module RedminePostgresqlSearch
         super
         @tokens = Tokenizer.build_tokens(@question)
         return if @tokens.blank? # nothing to do
+
         @query_builder = QueryBuilder.new(@tokens, @options)
       end
 
@@ -39,7 +40,7 @@ module RedminePostgresqlSearch
             result.each_row.map { |scope, id| [scope, id.to_i] }
           else
             []
-        end
+          end
         # Use Redmine's default search as fallback if a type has no config for Postgres
         # and append them to the PostgreSQL fts search results.
         # This means that other results will be ranked lower than all fts results.
