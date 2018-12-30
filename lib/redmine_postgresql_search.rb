@@ -51,17 +51,11 @@ module RedminePostgresqlSearch
   end
 
   def self.settings
-    if Rails.version >= '5.2'
-      Setting[:plugin_redmine_postgresql_search]
-    else
-      ActionController::Parameters.new(Setting[:plugin_redmine_postgresql_search])
-    end
+    Additionals.settings_compatible(:plugin_redmine_postgresql_search)
   end
 
   def self.setting?(value)
-    return true if settings[value].to_i == 1
-
-    false
+    Additionals.true?(settings[value])
   end
 
   def self.rebuild_indices
