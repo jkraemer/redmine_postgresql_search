@@ -1,3 +1,6 @@
+require_dependency 'redmine_postgresql_search/tokenizer'
+require_dependency 'redmine_postgresql_search/query_builder'
+
 module RedminePostgresqlSearch
   module Patches
     module Fetcher
