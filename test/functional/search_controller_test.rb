@@ -23,7 +23,7 @@ class SearchControllerTest < Redmine::ControllerTest
   def test_search_on_archived_project_should_return_403
     Project.find(3).archive
     get :index, params: { id: 3 }
-    if Redmine::VERSION::BRANCH == 'devel'
+    if Rails.version >= '5.2'
       assert_response 403
     else
       assert_response 404
