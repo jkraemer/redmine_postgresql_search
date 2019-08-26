@@ -34,10 +34,8 @@ class FulltextIndex < ActiveRecord::Base
   private
 
   def multibyte?(value)
-    # umlaute not included
-    # value.length < value.bytesize
-    for pos in 0...value.length
-      return true if value[pos].ord > 255
+    value.each_char do |char|
+      return true if char.ord > 255
     end
 
     false
