@@ -14,10 +14,16 @@ Redmine::Plugin.register :redmine_postgresql_search do
   settings default: Additionals.load_settings('redmine_postgresql_search'), partial: 'settings/postgresql_search/postgresql_search'
 end
 
-Rails.configuration.to_prepare do
-  if Redmine::Database.postgresql?
-    RedminePostgresqlSearch.setup
-  else
-    'You are not using PostgreSQL. The redmine_postgresql_search plugin will not do anything.'
+begin
+  if ActiveRecord::Base.connection.table_exists?(Setting.table_name)
+    Rails.configuration.to_prepare do
+      if Redmine::Database.postgresql?
+        RedminePostgresqlSearch.setup
+      else
+        'You are not using PostgreSQL. The redmine_postgresql_search plugin will not do anything.'
+      end
+    end
   end
+rescue ActiveRecord::NoDatabaseError
+  Rails.logger.error 'database not created yet'
 end
