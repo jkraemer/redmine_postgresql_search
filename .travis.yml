@@ -10,8 +10,13 @@ services:
   - postgresql
 
 env:
-  - REDMINE_VER=4.0-stable DB=postgresql
-  - REDMINE_VER=3.4-stable DB=postgresql
+  - REDMINE_VER=4.0-stable
+  - REDMINE_VER=3.4-stable
+
+matrix:
+  exclude:
+  - rvm: 2.6.3
+    env: REDMINE_VER=3.4-stable
 
 sudo: true
 cache: bundler
