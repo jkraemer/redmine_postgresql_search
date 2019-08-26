@@ -2,7 +2,7 @@ de:
   label_postgresql_search: PostgreSQL Volltextsuche
   label_postgresql_search_ranking: Gewichtung
   label_postgresql_search_all_words: Nur exakte Treffer für alle Wörter
-  label_postgresql_search_all_words_by_default: Standardmäßig nur nach exakten Treffen für alle Wörter suchen
+  label_search_all_words_by_default: Standardmäßig nur nach exakten Treffen für alle Wörter suchen
   label_fulltext_indices_count: Volltextindex
   label_trigram_words_count: Trigram Wörter
   label_fulltext_last_issue_id: Letzte Ticket ID
@@ -13,3 +13,4 @@ de:
   postgresql_search_age_weight_info: 'Der Zeitpunkt der letzten Änderung fließt in die Reihenfolge der Suchtreffer ein. Die Gewichtung ist maximal 1 für ein gerade erstelltes Objekt und folgt einer <a href="https://de.wikipedia.org/wiki/Exponentieller_Prozess" rel="nofollow">exponentiellen Abnahme</a>. Das genaue Verhalten kann hier eingestellt werden.'
   postgresql_search_age_weight_min_info: Die untere Grenze für die Gewichtung lässt sich hier einstellen. Ab einem gewissen Alter ändert sich dann die Gewichtung nicht mehr.
   postgresql_search_age_weight_lifetime_info: Die Zeitkonstante τ oder auch "Lebensdauer" gibt an, wie viele Tage es dauert, bis die Gewichtung auf etwa 0.37 (Zahl e) abgefallen ist. Ein höherer Wert sollte eingestellt werden, falls relevante Treffer zu weit hinten liegen.
+  label_disallow_multibyte_words: Multibyte Wörter ausschließen

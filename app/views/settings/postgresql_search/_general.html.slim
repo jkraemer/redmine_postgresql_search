@@ -1,3 +1,2 @@
-p
-  = label_tag 'settings[all_words_by_default]', l(:label_postgresql_search_all_words_by_default)
-  = check_box_tag 'settings[all_words_by_default]', 1, @settings[:all_words_by_default].to_i == 1
+p = additionals_settings_checkbox :search_all_words_by_default
+p = additionals_settings_checkbox :disallow_multibyte_words

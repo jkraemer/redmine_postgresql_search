@@ -1,0 +1,4 @@
+age_weight_min: 0.1
+age_weight_lifetime: 365
+disallow_multibyte: 0
+search_all_words_by_default: 1

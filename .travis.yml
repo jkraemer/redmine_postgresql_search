@@ -1,9 +1,13 @@
 language: ruby
+dist: xenial
 
 rvm:
-  - 2.4.5
+  - 2.6.3
+  - 2.4.6
   - 2.3.8
-  - 2.2.10
+
+services:
+  - postgresql
 
 env:
   - REDMINE_VER=4.0-stable DB=postgresql
@@ -11,9 +15,6 @@ env:
 
 sudo: true
 cache: bundler
-
-addons:
-  postgresql: "9.6"
 
 before_install:
   - export PLUGIN_NAME=redmine_postgresql_search
@@ -29,12 +30,7 @@ before_install:
   - cp $TRAVIS_BUILD_DIR/test/support/database-travis.yml $REDMINE_PATH/config/database.yml
 
 before_script:
-  - psql -c 'create database travis_ci_test;' -U postgres
-  - psql -c 'create extension unaccent;' -U postgres travis_ci_test
-  - psql -c 'create extension pg_trgm;' -U postgres travis_ci_test
-  - bundle exec rake db:migrate
-  - bundle exec rake redmine:plugins:migrate
-  - bundle exec rake db:structure:dump
+  - bundle exec rake db:create db:migrate redmine:plugins:migrate
 
 script:
   - export SKIP_COVERAGE=1

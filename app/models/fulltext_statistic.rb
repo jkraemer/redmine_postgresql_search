@@ -13,14 +13,14 @@ class FulltextStatistic
 
   def self.last_issue_words
     words = FulltextIndex.select(:words).order('id DESC').find_by(searchable_type: 'Issue').try(:words)
-    return '' if words.empty?
+    return '' if words.blank?
 
     words.join(', ')
   end
 
   def self.last_journal_words
     words = FulltextIndex.select(:words).order('id DESC').find_by(searchable_type: 'Journal').try(:words)
-    return '' if words.empty?
+    return '' if words.blank?
 
     words.join(', ')
   end
