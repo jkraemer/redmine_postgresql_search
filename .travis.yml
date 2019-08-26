@@ -31,7 +31,8 @@ before_install:
   - cp $TRAVIS_BUILD_DIR/test/support/database-travis.yml $REDMINE_PATH/config/database.yml
 
 before_script:
-  - bundle exec rake db:create db:migrate redmine:plugins:migrate
+  - bundle exec rake db:create db:migrate
+  - bundle exec rake redmine:plugins:migrate
 
 script:
   - export SKIP_COVERAGE=1
