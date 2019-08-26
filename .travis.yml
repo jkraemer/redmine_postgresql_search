@@ -21,7 +21,6 @@ before_install:
   - export REDMINE_GIT_REPO=git://github.com/redmine/redmine.git
   - export REDMINE_PATH=$HOME/redmine
   - export BUNDLE_GEMFILE=$REDMINE_PATH/Gemfile
-  - export RAILS_ENV=test
   - git clone $REDMINE_GIT_REPO $REDMINE_PATH
   - cd $REDMINE_PATH
   - if [[ "$REDMINE_VER" != "master" ]]; then git checkout -b $REDMINE_VER origin/$REDMINE_VER; fi
@@ -31,10 +30,12 @@ before_install:
   - cp $TRAVIS_BUILD_DIR/test/support/database-travis.yml $REDMINE_PATH/config/database.yml
 
 before_script:
+  - export RAILS_ENV=test
   - bundle exec rake db:create db:migrate
   - bundle exec rake redmine:plugins:migrate
 
 script:
+  - export RAILS_ENV=test
   - export SKIP_COVERAGE=1
   - if [[ "$REDMINE_VER" == "master" ]]; then bundle exec rake redmine:plugins:test:units NAME=$PLUGIN_NAME; fi
   - if [[ "$REDMINE_VER" == "master" ]]; then bundle exec rake redmine:plugins:test:functionals NAME=$PLUGIN_NAME; fi
