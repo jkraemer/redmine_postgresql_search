@@ -15,7 +15,13 @@ table
       - issue_id = FulltextStatistic.last_issue_id
       td
         - if issue_id.present?
-          = link_to_issue(Issue.find_by(id: issue_id))
+          - issue = Issue.find_by(id: issue_id)
+          - if issue
+            = link_to_issue(Issue.find_by(id: issue_id))
+          - else
+            / if issue has been deleted
+            = issue_id
+
     tr
       td = l(:label_fulltext_last_issue_words)
       td = FulltextStatistic.last_issue_words
