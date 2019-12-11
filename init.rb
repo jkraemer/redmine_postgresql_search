@@ -3,10 +3,10 @@ Redmine::Plugin.register :redmine_postgresql_search do
   url  'http://redmine-search.com/'
   description 'This plugin adds advanced fulltext search capabilities to Redmine. PostgreSQL required.'
   author 'Jens Krämer/AlphaNodes'
-  version '1.0.4'
+  version '1.0.5'
 
   begin
-    requires_redmine_plugin :additionals, version_or_higher: '2.0.21'
+    requires_redmine_plugin :additionals, version_or_higher: '2.0.22'
   rescue Redmine::PluginNotFound
     raise 'Please install additionals plugin (https://github.com/alphanodes/additionals)'
   end

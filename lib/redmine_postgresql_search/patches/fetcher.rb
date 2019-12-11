@@ -8,7 +8,7 @@ module RedminePostgresqlSearch
       # allow any number of tokens of any length
       def initialize(question, user, scope, projects, options = {})
         super
-        @tokens = Tokenizer.build_tokens(@question)
+        @tokens, @force_regular_search = Tokenizer.build_tokens(@question)
         return if @tokens.blank? # nothing to do
 
         @query_builder = QueryBuilder.new(@tokens, @options)
@@ -16,6 +16,7 @@ module RedminePostgresqlSearch
 
       def load_result_ids
         return [] if @tokens.blank?
+        return super if @force_regular_search
 
         queries_with_scope = []
         scope_options = {}
