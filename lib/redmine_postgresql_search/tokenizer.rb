@@ -29,7 +29,7 @@ module RedminePostgresqlSearch
     # TODO: at the moment this breaks phrase search
     def self.sanitize_query_tokens(tokens)
       Array(tokens).map do |token|
-        if token =~ /\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/ # allow ip address search
+        if token =~ /\b\d{1,3}\.\d{1,3}\.\d{1,3}\./ # allow ip address search
           token
         else
           token.to_s.split(/[^[:alnum:]\*]+/).select { |w| w.present? && w.length > 1 }
