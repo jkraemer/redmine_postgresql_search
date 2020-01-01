@@ -1,4 +1,4 @@
-class AddSearchFunctions < Rails.version < '5.2' ? ActiveRecord::Migration : ActiveRecord::Migration[4.2]
+class AddSearchFunctions < ActiveRecord::Migration[4.2]
   include RedminePostgresqlSearch::Migration
 
   def up

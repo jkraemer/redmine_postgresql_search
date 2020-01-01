@@ -1,4 +1,4 @@
-class CreateFulltextIndices < Rails.version < '5.2' ? ActiveRecord::Migration : ActiveRecord::Migration[4.2]
+class CreateFulltextIndices < ActiveRecord::Migration[4.2]
   def up
     create_table :fulltext_indices do |t|
       t.references :searchable, polymorphic: true, index: true, unique: true

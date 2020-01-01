@@ -1,5 +1,5 @@
 class FulltextIndex < ActiveRecord::Base
-  belongs_to :searchable, polymorphic: true, required: true
+  belongs_to :searchable, polymorphic: true, optional: false
 
   # valid weight keys. the default weights assigned are {1, 0.4, 0.2, 0.1}
   WEIGHTS = %w[A B C D].freeze

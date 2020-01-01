@@ -23,11 +23,7 @@ class SearchControllerTest < Redmine::ControllerTest
   def test_search_on_archived_project_should_return_403
     Project.find(3).archive
     get :index, params: { id: 3 }
-    if Rails.version >= '5.2'
-      assert_response 403
-    else
-      assert_response 404
-    end
+    assert_response 403
   end
 
   def test_search_on_invisible_project_by_user_should_be_denied
@@ -241,7 +237,8 @@ class SearchControllerTest < Redmine::ControllerTest
   end
 
   def test_search_with_pagination
-    issues = (0..24).map { Issue.generate! subject: 'search_with_limited_results' }.reverse
+    issues = (0..24).map { Issue.generate! subject: 'search_with_limited_results' }
+    issues.reverse!
 
     get :index, params: { q: 'search_with_limited_results' }
     assert_response :success

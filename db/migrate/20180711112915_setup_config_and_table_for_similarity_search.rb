@@ -1,4 +1,4 @@
-class SetupConfigAndTableForSimilaritySearch < Rails.version < '5.2' ? ActiveRecord::Migration : ActiveRecord::Migration[4.2]
+class SetupConfigAndTableForSimilaritySearch < ActiveRecord::Migration[4.2]
   def up
     language = ENV['language'] || 'english'
     config_name = FulltextIndex::WORD_CONFIG

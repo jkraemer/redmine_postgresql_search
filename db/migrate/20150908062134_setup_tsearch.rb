@@ -8,7 +8,7 @@
 # content. See
 # http://www.postgresql.org/docs/current/static/textsearch-configuration.html
 # for more information.
-class SetupTsearch < Rails.version < '5.2' ? ActiveRecord::Migration : ActiveRecord::Migration[4.2]
+class SetupTsearch < ActiveRecord::Migration[4.2]
   def up
     enable_extension 'unaccent'
     language = ENV['language'] || 'english'

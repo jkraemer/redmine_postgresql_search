@@ -24,13 +24,16 @@ module RedminePostgresqlSearch
 
       # TODO: at the moment this breaks phrase search
       def sanitize_query_tokens(tokens)
-        Array(tokens).map do |token|
+        rc = Array(tokens).map do |token|
           if force_regular_search? token
             token
           else
             token.to_s.split(/[^[:alnum:]\*]+/).select { |w| w.present? && w.length > 1 }
           end
-        end.flatten.uniq
+        end
+
+        rc.flatten!
+        rc.uniq
       end
     end
 
