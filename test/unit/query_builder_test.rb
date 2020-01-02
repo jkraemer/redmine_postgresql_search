@@ -1,6 +1,10 @@
 require File.expand_path('../../test_helper', __FILE__)
 
 class QueryBuilderTest < RedminePostgresqlSearchTest
+  def setup
+    RedminePostgresqlSearch.rebuild_indices
+  end
+
   test 'should build all words query' do
     assert_query 'find&foo',
                  %w[find foo], all_words: true

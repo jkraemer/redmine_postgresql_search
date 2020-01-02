@@ -12,6 +12,7 @@ class SearchControllerTest < Redmine::ControllerTest
 
   def setup
     User.current = nil
+    RedminePostgresqlSearch.rebuild_indices
   end
 
   def test_search_for_projects

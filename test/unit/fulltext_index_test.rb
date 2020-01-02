@@ -21,6 +21,7 @@ class FulltextIndexTest < RedminePostgresqlSearchTest
 
   setup do
     Setting.default_language = 'en'
+    RedminePostgresqlSearch.rebuild_indices
     @project = Project.find(1)
     @wiki = Wiki.find(1)
   end

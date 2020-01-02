@@ -47,8 +47,6 @@ module RedminePostgresqlSearch
 
       setup_searchable Journal,
                        mapping: { b: :notes, c: -> { journalized.subject if journalized.is_a?(Issue) } }
-
-      load 'redmine_postgresql_search/test_support.rb' if Rails.env.test?
     end
 
     def settings
@@ -71,7 +69,7 @@ module RedminePostgresqlSearch
         has_one :fulltext_index, as: :searchable, dependent: :delete
         if (condition = options[:if])
           define_method :add_to_index? do
-            !!instance_exec(&condition)
+            !!instance_exec(&condition) # rubocop:disable Style/DoubleNegation
           end
         else
           define_method :add_to_index? do

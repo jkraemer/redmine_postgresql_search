@@ -5,6 +5,7 @@ class SetupConfigAndTableForSimilaritySearch < ActiveRecord::Migration[4.2]
 
     enable_extension 'pg_trgm'
 
+    drop_table :fulltext_words, if_exists: true
     add_column :fulltext_indices, :words, :string, array: true
     execute %{CREATE TABLE fulltext_words (word text, ndoc integer)}
 
@@ -46,8 +47,7 @@ class SetupConfigAndTableForSimilaritySearch < ActiveRecord::Migration[4.2]
       DROP TEXT SEARCH DICTIONARY IF EXISTS #{config_name};
     SQL
 
-    drop_table :fulltext_words
-
+    drop_table :fulltext_words, if_exists: true
     remove_column :fulltext_indices, :words, :string, array: true
   end
 end

@@ -23,8 +23,8 @@ class SetupTsearch < ActiveRecord::Migration[4.2]
   def down
     config_name = FulltextIndex::SEARCH_CONFIG
     execute <<-SQL
-      DROP TEXT SEARCH CONFIGURATION #{config_name};
-      DROP TEXT SEARCH DICTIONARY #{config_name};
+      DROP TEXT SEARCH CONFIGURATION IF EXISTS #{config_name};
+      DROP TEXT SEARCH DICTIONARY IF EXISTS #{config_name};
     SQL
   end
 end

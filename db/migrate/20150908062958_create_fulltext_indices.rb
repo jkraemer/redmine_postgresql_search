@@ -1,5 +1,6 @@
 class CreateFulltextIndices < ActiveRecord::Migration[4.2]
   def up
+    drop_table :fulltext_indices, if_exists: true
     create_table :fulltext_indices do |t|
       t.references :searchable, polymorphic: true, index: true, unique: true
       t.references :project, index: true
@@ -9,6 +10,6 @@ class CreateFulltextIndices < ActiveRecord::Migration[4.2]
   end
 
   def down
-    drop_table :fulltext_indices
+    drop_table :fulltext_indices, if_exists: true
   end
 end
