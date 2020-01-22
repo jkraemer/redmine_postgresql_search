@@ -22,13 +22,12 @@ module RedminePostgresqlSearch
         @force_regular_search
       end
 
-      # TODO: at the moment this breaks phrase search
       def sanitize_query_tokens(tokens)
         rc = Array(tokens).map do |token|
           if force_regular_search? token
             token
           else
-            token.to_s.split(/[^[:alnum:]\*]+/).select { |w| w.present? && w.length > 1 }
+            token.to_s.split(/[\.|:|;|,][\s|\Z|$]|\s[\.|\/|\\|,|;|:]\s|\s/).select { |w| w.present? && w.length > 1 }
           end
         end
 
@@ -53,7 +52,7 @@ module RedminePostgresqlSearch
     private
 
     def normalize_string(string)
-      string.to_s.gsub(/[^[:alnum:]]+/, ' ')
+      string.to_s.gsub(/[\.|:|;|,][\s|\Z|$]|\s[\.|\/|\\|,|;|:]\s/, ' ')
     end
 
     def get_value_for_fields(fields)
